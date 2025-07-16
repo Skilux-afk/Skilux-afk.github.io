@@ -1,29 +1,158 @@
-const button = document.getElementById("button")
-const textField = document.getElementById("textfield")
-const ul = document.getElementById("list")
+import { db } from './firebase.js'; // relativer Pfad!
 
+import { ref, push, set, onValue } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-database.js";
 
-button.addEventListener("click", function() {
-    addItem(textField.value);
-  });
+const listeRef = ref(db, "liste");
 
-function addItem(name) {
-    const newItem = document.createElement("li")
-    newItem.appendChild(document.createTextNode(name))
-    ul.appendChild(newItem)
+window.onload = () => {
+    const list = document.getElementById("list");
+    const addButton = document.getElementById("add");
+    const textfield = document.getElementById("textfield"); 
+
+    addButton.addEventListener("click", () => {
+        let input = textfield.value;
+        if (input == "") {
+            return
+        }
+        addItem(input, currentDate());
+        textfield.value = "";
+        saveItems();
+    });
+
+    loadItems();
 }
 
 
-function foldOut() {
-    let status = ul.style.overflowY
 
-    if(status == "hidden") {
-        ul.style.overflowY = "visible"
+function getItems() {
+    return JSON.parse(localStorage.getItem("einkaufsliste")) || [];
+}
+
+function loadItems() {
+    for(let item of getItems()) {
+        addItem(item.product, item.date);
     }
-    else {
-        ul.style.overflowY = "hidden"
-    }
+}
+
+function saveItems() {
+
+    const groceries = [];
+    const dates = [];
+
+    document.querySelectorAll(".product").forEach( (elmnt) => {
+        groceries.push(elmnt.innerText);
+    })
+
+    document.querySelectorAll(".date").forEach((date, index ) => {
+        dates[index] = date.innerText;
+    })
+
+    const items = groceries.map((grocery, index) => 
+        ({product: grocery, date : dates[index]}
+    ));
+            
+    localStorage.setItem("einkaufsliste", JSON.stringify(items));
+}    
+
+function addItem(product, date) {
+
+    //List-item erstellen
+    const li = document.createElement("li");
+    document.querySelector("ul").appendChild(li);
+
+    // Delete icon erstellen
+    const iconDel = document.createElement("span");
+    iconDel.classList.add("material-symbols-outlined");
+    iconDel.innerText = "close";
+    iconDel.classList.add("close");
+    
+
+    //delete item
+    iconDel.addEventListener("click", () => {
+        li.classList.add("fade-out");
+        setTimeout(() => {
+            removeItem(product, date);
+            li.remove();
+        }, 400);
+        
+    })
+
+
+    // check icon erstellen
+    const check = document.createElement("span");
+    check.classList.add("material-symbols-outlined");
+    check.innerText = "check";
+    check.classList.add("check");
+    
+    
+
+    //Produktnamen erstellen
+    const p1 = document.createElement("p");
+    p1.innerText = product;
+    p1.classList.add("product");
+
+    //Datum
+    const p2 = document.createElement("p");
+    p2.innerText = date;
+    p2.className = "date";
+
+    //check item
+
+    let crossed = false;
+    check.addEventListener("click", () => {
+        
+        if(!crossed) {
+            p1.style.textDecoration = "line-through";
+            crossed = true;
+        }
+        else {
+            p1.style.textDecoration = "none";
+            crossed = false;
+        }
+        
+    })
+
+    li.append(p1,check,iconDel,p2);
+    
+
+
+    const neuerEinkauf = push(listeRef);
+
+    set(neuerEinkauf, {
+        product: "test",
+        date: "date"
+    });
+
+}
+
+function removeItem(product, date) {
+    const items =  getItems()
+    const sortedItems = items.filter(item => !(item.product === product && item.date === date));
+    localStorage.setItem("einkaufsliste", JSON.stringify(sortedItems));
     
 }
 
-ul.onclick = foldOut;
+function currentDate() {
+    let dateObj = new Date();
+    let hour = dateObj.getHours();
+    let minute = dateObj.getMinutes();
+    let day = "";
+    switch (dateObj.getDay()) {
+        case 1: day = "Montag"
+        break;
+        case 2: day = "Dienstag"
+        break;
+        case 3: day = "Mittwoch"
+        break;
+        case 4: day = "Donnerstag"
+        break;
+        case 5: day = "Freitag"
+        break;
+        case 6: day = "Samstag"
+        break;
+        case 0: day = "Sonntag"
+        break;    
+        }
+
+    return `${day}, ${hour} : ` + minute.toString().padStart(2,"0");
+}

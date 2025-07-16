@@ -2,31 +2,9 @@
 <html lang="eng">
     <head>
         <link rel="stylesheet" href="style.css">
-        <script src="script.js"></script>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=delete" />
-        <script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-analytics.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
+        <script type="module" src="script.js"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
 
-  // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-  const firebaseConfig = {
-    apiKey: "AIzaSyAF_96r3Odby5ka8FH1S7V0fa1cOgGx3vk",
-    authDomain: "einkaufsliste-35fc9.firebaseapp.com",
-    projectId: "einkaufsliste-35fc9",
-    storageBucket: "einkaufsliste-35fc9.firebasestorage.app",
-    messagingSenderId: "561414364840",
-    appId: "1:561414364840:web:036de241c80129fba9ec9d",
-    measurementId: "G-RSGX9PVYWJ"
-  };
-
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-</script>
     </head>
     <body>
         <header>
@@ -37,9 +15,14 @@
         <main>
             
             <div>
-                <label for="textfield">Add Task:</label>
+                <label for="textfield">Add Item:</label>
                 <input id="textfield" type="text">
-                <button id="add" type="button">ADD</button>
+                <!--<button id="add" type="button">ADD</button>
+                <img id="add" src="add_notes_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg">-->
+                <svg id="add" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#1f1f1f"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v268q-19-9-39-15.5t-41-9.5v-243H200v560h242q3 22 9.5 42t15.5 38H200Zm0-120v40-560 243-3 280Zm80-40h163q3-21 9.5-41t14.5-39H280v80Zm0-160h244q32-30 71.5-50t84.5-27v-3H280v80Zm0-160h400v-80H280v80ZM720-40q-83 0-141.5-58.5T520-240q0-83 58.5-141.5T720-440q83 0 141.5 58.5T920-240q0 83-58.5 141.5T720-40Zm-20-80h40v-100h100v-40H740v-100h-40v100H600v40h100v100Z">
+                    <path xmlns="http://www.w3.org/2000/svg" 
+                    d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v268q-19-9-39-15.5t-41-9.5v-243H200v560h242q3 22 9.5 42t15.5 38H200Zm0-120v40-560 243-3 280Zm80-40h163q3-21 9.5-41t14.5-39H280v80Zm0-160h244q32-30 71.5-50t84.5-27v-3H280v80Zm0-160h400v-80H280v80ZM720-40q-83 0-141.5-58.5T520-240q0-83 58.5-141.5T720-440q83 0 141.5 58.5T920-240q0 83-58.5 141.5T720-40Zm-20-80h40v-100h100v-40H740v-100h-40v100H600v40h100v100Z"/>
+                </svg>
             </div>
             <ul id="list">
                 
