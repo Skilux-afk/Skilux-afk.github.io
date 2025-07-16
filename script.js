@@ -1,6 +1,6 @@
 import { db } from './firebase.js'; // relativer Pfad!
 
-import { ref, push, set, onValue } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-database.js";
+import { ref, push, set, get, onValue } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-database.js";
 
 const listeRef = ref(db, "liste");
 
@@ -15,11 +15,53 @@ window.onload = () => {
             return
         }
         addItem(input, currentDate());
+        saveItem(input, currentDate());
         textfield.value = "";
-        saveItems();
+        //saveItems();
     });
 
-    loadItems();
+    loadItemsFirebase();
+    //loadItems();
+}
+
+
+//Firebase
+function saveItem(product, date) {
+    
+    const neuerEinkauf = push(listeRef);
+    set(neuerEinkauf, {
+        product: product,
+        date: date
+    });
+}
+
+
+
+function getItemsFirebase() {
+    return get(listeRef).then((snapshot) => {
+        if(snapshot.exists()) {
+            return Object.values(snapshot.val());
+        }
+        else {
+            return {};
+        }
+    
+        
+    }).catch((error) => {
+        console.log(error);
+        return {};
+    })
+        
+}
+
+function loadItemsFirebase() {
+    getItemsFirebase().then(items => {
+        items.forEach(item => {
+            addItem(item.product, item.date);
+        })
+        
+    })
+    
 }
 
 
@@ -52,7 +94,13 @@ function saveItems() {
     ));
             
     localStorage.setItem("einkaufsliste", JSON.stringify(items));
+
+
+    
+
+    
 }    
+
 
 function addItem(product, date) {
 
@@ -116,12 +164,7 @@ function addItem(product, date) {
     
 
 
-    const neuerEinkauf = push(listeRef);
-
-    set(neuerEinkauf, {
-        product: "test",
-        date: "date"
-    });
+    
 
 }
 
