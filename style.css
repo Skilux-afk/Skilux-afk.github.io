@@ -77,6 +77,13 @@ button{
     height: 3.3vh;
     
 }
+
+svg{
+    flex-grow: 0.5;
+    height: 4vh;
+    min-height: 40px;
+    width: auto;
+}
 #textfield::selection, #textfield:focus {
     border: none;
     border-bottom: 2px solid royalblue;
@@ -100,31 +107,48 @@ ul {
 }
 
 li {
+    padding: 0 2% 0 2%;
+    display: grid;
+    grid-template-columns: 4fr min-content min-content;
+    grid-template-rows: auto auto;
     list-style:none;
     width: 60vw;
-    height: 5vh;
     box-shadow: 0 2.5px 5px black ;
     margin: 0 0 5px 0;
-    display: flex;
-
+    transition: transform 0.7s ease-in;  
+}
+.product {
+    grid-row: 1 / span 2;
+    justify-self: start;
+    align-self: center;
+    font-size: large;
 }
 
 .date {
-    text-align: end;
-    font-size: 1.5vh;
+    grid-column: 2 / span 2;
+    justify-self: end;
+    font-size: small;
+    white-space: nowrap;
 }
 
-.product {
-
+.check {
+    justify-self: center;
 }
 
-.material-symbols-outlined {
+.close {
+    justify-self: center;
     height: 1.5vh;
     color: darkred;
 }
 
 
+
+
 .fade-out {
-  transform: translate(150%);
-  transition: all 0.5s ease-in;
+    transform: translateX(150%);
+}
+
+
+@media only screen and (min-width: 992px) {
+    
 }

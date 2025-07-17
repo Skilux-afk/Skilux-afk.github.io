@@ -1,6 +1,6 @@
-import { db } from './firebase.js'; // relativer Pfad!
+import { db } from './firebase.js'; 
 
-import { ref, push, set, get, onValue } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-database.js";
+import { ref, push, set, get, onValue, remove } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-database.js";
 
 const listeRef = ref(db, "liste");
 
@@ -28,8 +28,8 @@ window.onload = () => {
 //Firebase
 function saveItem(product, date) {
     
-    const neuerEinkauf = push(listeRef);
-    set(neuerEinkauf, {
+    const newItem = push(listeRef);
+    set(newItem, {
         product: product,
         date: date
     });
@@ -62,6 +62,23 @@ function loadItemsFirebase() {
         
     })
     
+}
+
+function deleteItem(product, date) {
+    get(listeRef).then((snapshot) => {
+        if (snapshot.exists()) {
+            const data = snapshot.val(); // z.B. { "-Mx2...": { product: "Milch", date: "..." }, ... }
+
+            Object.entries(data).forEach(([key, value]) => {
+                if (value.product === product && value.date === date) {
+                    const itemRef = ref(db, `liste/${key}`);
+                    remove(itemRef); // 👈 tatsächliches Löschen
+                }
+            });
+        }
+    }).catch((error) => {
+        console.error("Fehler beim Löschen:", error);
+    });
 }
 
 
@@ -119,7 +136,8 @@ function addItem(product, date) {
     iconDel.addEventListener("click", () => {
         li.classList.add("fade-out");
         setTimeout(() => {
-            removeItem(product, date);
+            //removeItem(product, date);
+            deleteItem(product, date);
             li.remove();
         }, 400);
         
