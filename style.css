@@ -57,13 +57,16 @@ div {
 }
 
 label {
-    flex-grow: 0.5;
+    flex-grow: 1;
+    flex-shrink: 1;
     height: 3.3vh;
     text-align: center;
 }
 
 #textfield {
-    flex: 2;
+    font-size: large;
+    flex-grow: 3;
+    flex-shrink: 1;
     border: none;
     border-bottom: 1px solid grey;
 }
@@ -79,10 +82,12 @@ button{
 }
 
 svg{
-    flex-grow: 0.5;
+    flex-grow: 1;
+    flex-shrink: 0;
     height: 4vh;
     min-height: 40px;
     width: auto;
+    font-size: large;
 }
 #textfield::selection, #textfield:focus {
     border: none;
@@ -149,6 +154,12 @@ li {
 }
 
 
-@media only screen and (min-width: 992px) {
-    
+@media only screen and (max-width: 500px) {
+    label {
+        position: absolute;
+        opacity: 0;
+        height: 1vh;
+        font-size: small;
+
+    }
 }
