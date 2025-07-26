@@ -3,6 +3,7 @@ import { db } from './firebase.js';
 import { ref, push, set, get, onValue, remove } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-database.js";
 
 const listeRef = ref(db, "liste");
+const purchases = ref(db, "purchases");
 
 window.onload = () => {
     const list = document.getElementById("list");
@@ -17,11 +18,11 @@ window.onload = () => {
         addItem(input, currentDate());
         saveItem(input, currentDate());
         textfield.value = "";
-        //saveItems();
+        
     });
 
     loadItemsFirebase();
-    //loadItems();
+    loadPurchasedItems();
 }
 
 
@@ -34,8 +35,6 @@ function saveItem(product, date) {
         date: date
     });
 }
-
-
 
 function getItemsFirebase() {
     return get(listeRef).then((snapshot) => {
@@ -81,49 +80,49 @@ function deleteItem(product, date) {
     });
 }
 
+function addPurchase(product, date) {
+    const purchasedList = document.querySelector("#purchases");
+    const purchasedItem = document.createElement("li");
+    purchasedItem.className = "purchasedLi";
+    purchasedList.prepend(purchasedItem);
 
+    const p1 = document.createElement("p");
+    p1.className = "p1";
+    p1.innerText = product;
 
-function getItems() {
-    return JSON.parse(localStorage.getItem("einkaufsliste")) || [];
+    const p2 = document.createElement("p");
+    p2.className = "p2";
+    p2.innerText = date;
+
+    purchasedItem.append(p1, p2);
+    
 }
 
-function loadItems() {
-    for(let item of getItems()) {
-        addItem(item.product, item.date);
-    }
+function savePurchase(product, date) {
+    const newKey = push(purchases);
+    set(newKey, {product: product, date: date});
 }
 
-function saveItems() {
-
-    const groceries = [];
-    const dates = [];
-
-    document.querySelectorAll(".product").forEach( (elmnt) => {
-        groceries.push(elmnt.innerText);
+function loadPurchasedItems() {
+    get(purchases).then((snapshot) => {
+        if(snapshot.exists()) {
+            const items = Object.values(snapshot.val());
+            items.forEach((item) => {
+                addPurchase(item.product, item.date);
+            })
+        }
+        else {}
+    }).catch(error => {
+        console.log(error);
     })
-
-    document.querySelectorAll(".date").forEach((date, index ) => {
-        dates[index] = date.innerText;
-    })
-
-    const items = groceries.map((grocery, index) => 
-        ({product: grocery, date : dates[index]}
-    ));
-            
-    localStorage.setItem("einkaufsliste", JSON.stringify(items));
-
-
-    
-
-    
-}    
-
+}
 
 function addItem(product, date) {
 
     //List-item erstellen
     const li = document.createElement("li");
-    document.querySelector("ul").appendChild(li);
+    li.classList.add("activeLi")
+    document.querySelector("#activeList").appendChild(li);
 
     // Delete icon erstellen
     const iconDel = document.createElement("span");
@@ -132,11 +131,10 @@ function addItem(product, date) {
     iconDel.classList.add("close");
     
 
-    //delete item
+    //delete an item
     iconDel.addEventListener("click", () => {
         li.classList.add("fade-out");
         setTimeout(() => {
-            //removeItem(product, date);
             deleteItem(product, date);
             li.remove();
         }, 400);
@@ -150,7 +148,14 @@ function addItem(product, date) {
     check.innerText = "check";
     check.classList.add("check");
     
-    
+    //check an item
+
+    check.addEventListener("click", () => {
+        addPurchase(product, date);
+        savePurchase(product, date);
+        deleteItem(product, date);
+        li.remove();
+    })
 
     //Produktnamen erstellen
     const p1 = document.createElement("p");
@@ -162,36 +167,13 @@ function addItem(product, date) {
     p2.innerText = date;
     p2.className = "date";
 
-    //check item
-
-    let crossed = false;
-    check.addEventListener("click", () => {
-        
-        if(!crossed) {
-            p1.style.textDecoration = "line-through";
-            crossed = true;
-        }
-        else {
-            p1.style.textDecoration = "none";
-            crossed = false;
-        }
-        
-    })
+    
 
     li.append(p1,check,iconDel,p2);
-    
-
-
-    
-
 }
 
-function removeItem(product, date) {
-    const items =  getItems()
-    const sortedItems = items.filter(item => !(item.product === product && item.date === date));
-    localStorage.setItem("einkaufsliste", JSON.stringify(sortedItems));
-    
-}
+
+
 
 function currentDate() {
     let dateObj = new Date();
