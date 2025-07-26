@@ -183,6 +183,9 @@ li {
     transform: translateX(150%);
 }
 
+.slide-left {
+    transform: translateX(-150%);
+}
 
 @media only screen and (max-width: 500px) {
     label {

@@ -151,10 +151,16 @@ function addItem(product, date) {
     //check an item
 
     check.addEventListener("click", () => {
-        addPurchase(product, date);
-        savePurchase(product, date);
-        deleteItem(product, date);
-        li.remove();
+        
+
+        li.classList.add("slide-left");
+        setTimeout(() => {
+            li.remove();
+            addPurchase(product, date);
+            savePurchase(product, date);
+            deleteItem(product, date);
+        }, 400);
+        
     })
 
     //Produktnamen erstellen
